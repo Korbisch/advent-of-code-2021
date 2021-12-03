@@ -8,15 +8,31 @@ with open(file_path, 'r') as file:
         arr = line.split()
         instructions.append({"instruction": arr[0], "amount": int(arr[1])})
 
-x_value = 0;
-y_value = 0;
+### Part 1 ###
+x_value, y_value = 0, 0
 
 for dict in instructions:
+    X = dict["amount"]
     if dict["instruction"] == "forward":
-        x_value += dict["amount"]
+        x_value += X
     elif dict["instruction"] == "down":
-        y_value += dict["amount"]
+        y_value += X
     else:
-        y_value -= dict["amount"]
+        y_value -= X
 
-print(x_value * y_value)
+print("solution 1: ", x_value * y_value)
+
+### Part 2 ###
+aim, horizontal, depth = 0, 0, 0
+
+for dict in instructions:
+    X = dict["amount"]
+    if dict["instruction"] == "down":
+        aim += X
+    elif dict["instruction"] == "up":
+        aim -= X
+    else:
+        horizontal += X
+        depth += aim * X
+
+print("solution 2: ", horizontal * depth)
