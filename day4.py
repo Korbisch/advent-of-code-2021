@@ -29,8 +29,7 @@ def mark_as_complete(boards, num):
     for board in boards:
         for line in board:
             for i, x in enumerate(line):
-                if x == num:
-                    line[i] = -1
+                if x == num: line[i] = -1
 
 # check if a row is bingo
 def row_is_bingo(board):
@@ -54,13 +53,12 @@ def is_bingo(boards):
             return board
     return False
 
-# calculate the sum of unchecked nums of a board
+# calculate the sum of unchecked nums of a bingo board
 def sum_of(board):
     board_sum = 0
     for line in board:
         for num in line:
-            if num != -1:
-                board_sum += num
+            if num != -1: board_sum += num
     return board_sum
 
 # draw a number and mark it as complete on all boards
