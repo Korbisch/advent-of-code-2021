@@ -71,3 +71,16 @@ for num in random_nums:
         break
 
 print(solution1)
+
+
+### Part 2 ###
+for i, num in enumerate(random_nums):
+    mark_as_complete(bingo_boards, num)
+    while is_bingo(bingo_boards) and len(bingo_boards) > 1:
+        solution_board = is_bingo(bingo_boards)
+        bingo_boards.remove(solution_board)
+    if len(bingo_boards) == 1 and is_bingo(bingo_boards):
+        solution2 = sum_of(bingo_boards[0]) * num
+        break
+
+print(solution2)
