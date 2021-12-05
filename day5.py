@@ -126,6 +126,44 @@ def get_all_diagonal_lines(lines):
             diagonal_lines.append(line)
     return diagonal_lines
 
+def add_easy_points(points, x1, y1, x2, y2):
+    # x1 and y1 are always the smaller coordinates
+    x1, y1, x2, y2 = min(x1, x2), min(y1, y2), max(x1, x2), max(y1, y2)
+    # increment until bigger point is reached
+    while x1 <= x2 and y1 <= y2:
+        point = {
+            'x': x1,
+            'y': y1
+        }
+        points.append(point)
+        x1 += 1
+        y1 += 1
+    return points
+
+def add_uneven_points_case_1(points, x1, y1, x2, y2):
+    # increment x1 and decrement y1
+    while x1 <= x2 and y1 >= y2:
+        point = {
+            'x': x1,
+            'y': y1
+        }
+        points.append(point)
+        x1 += 1
+        y1 -= 1
+    return points
+
+def add_uneven_points_case_2(points, x1, y1, x2, y2):
+    # increment y1 and decrement x1
+    while x1 >= x2 and y1 <= y2:
+        point = {
+            'x': x1,
+            'y': y1
+        }
+        points.append(point)
+        x1 -= 1
+        y1 += 1
+    return points
+
 # get all points from start to end of diagonal lines
 def get_all_points_for_diagonal_lines(points, lines):
     for line in lines:
@@ -133,42 +171,15 @@ def get_all_points_for_diagonal_lines(points, lines):
 
         # easy case: either first point is smaller or second point is smaller
         if (x1 < x2 and y1 < y2) or (x1 > x2 and y1 > y2):
-            # x1 and y1 are always the smaller coordinates
-            x1, y1, x2, y2 = min(x1, x2), min(y1, y2), max(x1, x2), max(y1, y2)
+            points = add_easy_points(points, x1, y1, x2, y2)       
 
-            # increment until bigger point is reached
-            while x1 <= x2 and y1 <= y2:
-                point = {
-                    'x': x1,
-                    'y': y1
-                }
-                points.append(point)
-                x1 += 1
-                y1 += 1
-
-        # harder cases: uneven points case 1
+        # uneven points case 1
         elif (x1 < x2 and y1 > y2):
-            # increment x1 and decrement y1
-            while x1 <= x2 and y1 >= y2:
-                point = {
-                    'x': x1,
-                    'y': y1
-                }
-                points.append(point)
-                x1 += 1
-                y1 -= 1
+            points = add_uneven_points_case_1(points, x1, y1, x2, y2)
 
         # uneven points case 2
         elif (x1 > x2 and y1 < y2):
-            # increment y1 and decrement x1
-            while x1 >= x2 and y1 <= y2:
-                point = {
-                    'x': x1,
-                    'y': y1
-                }
-                points.append(point)
-                x1 -= 1
-                y1 += 1
+            points = add_uneven_points_case_2(points, x1, y1, x2, y2)
 
     return points
 
