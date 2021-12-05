@@ -78,7 +78,7 @@ def create_board(x, y):
     return board
         
 # mark all points on the board
-def mark_lines_on_board(points, board):
+def mark_points_on_board(points, board):
     for point in points:
         x, y = point['x'], point['y']
         if board[x][y] == '.':
@@ -99,8 +99,86 @@ straight_lines = get_all_straight_lines(lines)
 points = get_all_points_for_straight_lines(straight_lines)
 max_x, max_y = find_max_x_y(straight_lines)
 board = create_board(max_x, max_y)
-mark_lines_on_board(points, board)
+mark_points_on_board(points, board)
 solution1 = count_board_for_overlap(board)
 
 print(solution1)
 
+
+### Part 2 ###
+
+# easy cases:
+# case 1: x1 < x2 and y1 < y2 (5,10)(10,15)
+    # -> increment x1, y1 until x2, y2 reached
+# case 2: x1 > x2 and y1 > y2 (10,15)(5,10)
+    # -> increment x2, y2 until x1, y1 reached
+
+# harder cases:
+# case 1: x1 < x2 and y1 > y2 (5,10)(10,5)
+    # -> increment x1, decrement y1 until x2, y2 reached
+# case 2: x1 > x2 and y1 < y2 (10,5)(5,10)
+    # -> decrement x1, increment y1
+
+def get_all_diagonal_lines(lines):
+    diagonal_lines = []
+    for line in lines:
+        if line['x1'] != line['x2'] or line['y1'] != line['y2']:
+            diagonal_lines.append(line)
+    return diagonal_lines
+
+# get all points from start to end of diagonal lines
+def get_all_points_for_diagonal_lines(points, lines):
+    for line in lines:
+        x1, y1, x2, y2 = line['x1'], line['y1'], line['x2'], line['y2']
+
+        # easy case: either first point is smaller or second point is smaller
+        if (x1 < x2 and y1 < y2) or (x1 > x2 and y1 > y2):
+            # x1 and y1 are always the smaller coordinates
+            x1, y1, x2, y2 = min(x1, x2), min(y1, y2), max(x1, x2), max(y1, y2)
+
+            # increment until bigger point is reached
+            while x1 <= x2 and y1 <= y2:
+                point = {
+                    'x': x1,
+                    'y': y1
+                }
+                points.append(point)
+                x1 += 1
+                y1 += 1
+
+        # harder cases: uneven points case 1
+        elif (x1 < x2 and y1 > y2):
+            # increment x1 and decrement y1
+            while x1 <= x2 and y1 >= y2:
+                point = {
+                    'x': x1,
+                    'y': y1
+                }
+                points.append(point)
+                x1 += 1
+                y1 -= 1
+
+        # uneven points case 2
+        elif (x1 > x2 and y1 < y2):
+            # increment y1 and decrement x1
+            while x1 >= x2 and y1 <= y2:
+                point = {
+                    'x': x1,
+                    'y': y1
+                }
+                points.append(point)
+                x1 -= 1
+                y1 += 1
+
+    return points
+
+straight_lines = get_all_straight_lines(lines)
+diagonal_lines = get_all_diagonal_lines(lines)
+points = get_all_points_for_straight_lines(straight_lines)
+points = get_all_points_for_diagonal_lines(points, diagonal_lines)
+max_x, max_y = find_max_x_y(lines)
+board = create_board(max_x, max_y)
+mark_points_on_board(points, board)
+solution2 = count_board_for_overlap(board)
+
+print(solution2)
